@@ -79,7 +79,7 @@ export const LandingScene: React.FC<LandingSceneProps> = ({
               </div>
               <div>
                 <div className="text-[10px] text-slate-500 uppercase tracking-wider">Mission Scenarios</div>
-                <div className="text-xl font-bold text-purple-400">15</div>
+                <div className="text-xl font-bold text-purple-400">{scenarios.length}</div>
               </div>
             </div>
           </div>

@@ -52,6 +52,9 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect, 
       <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 font-sans">
         {scenario.description}
       </p>
+      <p className="text-[10px] text-amber-300/80 leading-relaxed font-mono">
+        Scene: {scenario.scene_signature ?? scenario.scene_type}
+      </p>
 
       {/* Tags + CTA */}
       <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/60">

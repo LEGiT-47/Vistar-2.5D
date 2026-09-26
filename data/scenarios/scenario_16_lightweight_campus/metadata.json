@@ -1,0 +1,35 @@
+{
+  "id": "scenario_16_lightweight_campus",
+  "title": "Lightweight Campus Scout",
+  "dataset": "VISTAR Compact Replay",
+  "environment": "Pedestrian Campus Service Lane",
+  "challenge": "Fast Interactive Mapping with a Compact LiDAR Return Set",
+  "lidar_source": "Compact 16-beam LiDAR profile",
+  "description": "A deliberately lightweight campus route with sparse returns for low-latency operator replay.",
+  "license": "VISTAR-2.5D Open Benchmark",
+  "source_url": "https://github.com/vistar-2-5d",
+  "scene_type": "campus_lightweight",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "paved_campus",
+  "point_budget": 2400,
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    16.0,
+    1.5
+  ],
+  "scene_signature": "Campus scout: compact trees + pedestrian furniture",
+  "num_points": 2879,
+  "thumbnail_url": "/thumbnails/scenario_16_lightweight_campus.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

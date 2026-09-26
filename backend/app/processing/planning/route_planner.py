@@ -29,11 +29,9 @@ class RoutePlanner:
         start_node = (round(start_xy[0] / grid_step) * grid_step, round(start_xy[1] / grid_step) * grid_step)
         goal_node = (round(goal_xy[0] / grid_step) * grid_step, round(goal_xy[1] / grid_step) * grid_step)
 
-        # Build fast spatial lookup for cell traversability
-        # Use KDTree or nearest cell matching
-        cell_coords = []
-        cell_costs = []
-        cell_z = []
+        # Quantize cells once so A* lookups are O(1), rather than scanning
+        # every cell for every candidate node.
+        node_costs: Dict[Tuple[float, float], Tuple[float, float]] = {}
 
         for cell in (cells.values() if isinstance(cells, dict) else cells):
             cx = cell.x if hasattr(cell, 'x') else cell['x']
@@ -50,12 +48,15 @@ class RoutePlanner:
             else:
                 cost = 1.0 + (1.0 - effective_trav) * 8.0
 
-            cell_coords.append((cx, cy))
-            cell_costs.append(cost)
-            cell_z.append(cz)
+            node = (
+                round(cx / grid_step) * grid_step,
+                round(cy / grid_step) * grid_step,
+            )
+            previous = node_costs.get(node)
+            if previous is None or cost < previous[0]:
+                node_costs[node] = (cost, cz)
 
-        cell_coords_np = np.array(cell_coords)
-        if len(cell_coords_np) == 0:
+        if not node_costs:
             # Direct straight line fallback if no cells
             return {
                 "status": "FALLBACK_DIRECT",
@@ -74,11 +75,7 @@ class RoutePlanner:
             return float(np.hypot(b[0] - a[0], b[1] - a[1]))
 
         def get_cost_at(pt: Tuple[float, float]) -> Tuple[float, float]:
-            dists = np.linalg.norm(cell_coords_np - np.array(pt), axis=1)
-            min_idx = int(np.argmin(dists))
-            if dists[min_idx] > 2.5:
-                return 1.5, -1.6  # Default open terrain outside tight sensor bounds
-            return cell_costs[min_idx], cell_z[min_idx]
+            return node_costs.get(pt, (1.5, -1.6))
 
         found_goal = False
         best_node = start_node

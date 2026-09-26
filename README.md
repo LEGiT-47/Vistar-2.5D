@@ -55,7 +55,7 @@ Operator HUD & Fixed vs VISTAR Split Comparison
 
 ---
 
-## 15 Prepared Mission Scenarios
+## 16 Prepared Mission Scenarios
 
 1. **Urban Dynamic Traffic** — SemanticKITTI *(Multi-lane intersection with moving cars and pedestrians)*
 2. **Highway / Open Road** — KITTI / SemanticKITTI *(High-speed corridor with sparse far-field returns)*
@@ -72,6 +72,7 @@ Operator HUD & Fixed vs VISTAR Split Comparison
 13. **Dynamic Object Stress Test** — SemanticKITTI *(Fast cross-traffic de-cluttering)*
 14. **Synthetic Dust & Ghost Return Test** *(Controlled 18% ghost point injection)*
 15. **DEM Fusion Terrain Mission** — Copernicus GLO-90 *(Live adaptive LiDAR fused with 90m macroscopic DEM)*
+16. **Lightweight Campus Scout** — VISTAR Compact Replay *(Sparse compact return set for low-latency interactive mapping)*
 
 ---
 
@@ -101,6 +102,29 @@ npm run dev
 ```
 
 Open **`http://localhost:5173/`** in any modern web browser.
+
+## Deploying to Render and Netlify
+
+The backend and frontend deploy separately:
+
+1. Push this repository to GitHub.
+2. In Render, choose **New > Blueprint**, select the repository, and deploy
+   `render.yaml`. This creates the FastAPI service and exposes:
+   `https://<render-service>.onrender.com`.
+3. Confirm the backend is live at
+   `https://<render-service>.onrender.com/api/health`.
+4. In Netlify, choose **Add new site > Import an existing project**, select the
+   same repository, and keep the settings from `netlify.toml`.
+5. In the Netlify site settings, add this environment variable:
+   `VITE_API_BASE_URL=https://<render-service>.onrender.com/api`
+6. Trigger a new Netlify deploy after saving the variable.
+7. In Render, set `CORS_ORIGINS` to the Netlify site URL, for example:
+   `https://<site-name>.netlify.app`. For a temporary demo, `*` is also
+   supported by the backend.
+
+Render may cold-start the free backend after inactivity. The first pipeline run
+can therefore take longer; the centered processing modal stays visible until
+the result is ready.
 
 ---
 

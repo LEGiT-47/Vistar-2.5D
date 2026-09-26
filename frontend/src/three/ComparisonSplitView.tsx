@@ -19,11 +19,18 @@ export const ComparisonSplitView: React.FC<ComparisonSplitViewProps> = ({ result
     if (!containerLeftRef.current || !containerRightRef.current) return;
 
     // Shared camera orbit parameters
+    const pointValues = results.vis_payload.points;
+    const bounds = getBounds(pointValues);
+    const span = Math.max(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY, 12);
     const sharedPolar = {
-      radius: 38,
+      radius: span * 1.25,
       theta: Math.PI / 4.2,
-      phi: Math.PI / 3.4,
-      target: new THREE.Vector3(12, 0, -1.0)
+      phi: Math.PI / 3.0,
+      target: new THREE.Vector3(
+        (bounds.minX + bounds.maxX) / 2,
+        (bounds.minY + bounds.maxY) / 2,
+        bounds.minZ
+      )
     };
 
     // SETUP LEFT SCENE (CONVENTIONAL FIXED 5cm MAP)
@@ -48,56 +55,22 @@ export const ComparisonSplitView: React.FC<ComparisonSplitViewProps> = ({ result
       const dl = new THREE.DirectionalLight(0x00e5ff, 0.6);
       dl.position.set(20, 30, 40);
       sc.add(dl);
-      const grid = new THREE.GridHelper(90, 90, 0x1f293d, 0x111827);
+      const gridSize = Math.max(40, span * 1.8);
+      const grid = new THREE.GridHelper(gridSize, Math.min(120, Math.ceil(gridSize * 2)), 0x1f293d, 0x111827);
       grid.position.z = -1.61;
       grid.rotation.x = Math.PI / 2;
       sc.add(grid);
     });
 
-    // Populate Left (Uniform 5cm Fixed Cells)
-    const leftCellsGroup = new THREE.Group();
-    // Sample cells and show them as uniform 5cm tiles
+    // Use instancing on both sides: comparison is intentionally dense, but it
+    // should not create one GPU object and material for every visible tile.
     const rawCells = results.vis_payload.cells;
-    rawCells.slice(0, 1800).forEach(c => {
-      // Subdivide into uniform 5cm dense mini-grid
-      const subSteps = Math.max(1, Math.round(c.resolution / 0.05));
-      for (let sx = 0; sx < Math.min(3, subSteps); sx++) {
-        for (let sy = 0; sy < Math.min(3, subSteps); sy++) {
-          const geom = new THREE.BoxGeometry(0.046, 0.046, 0.08);
-          const mat = new THREE.MeshStandardMaterial({
-            color: 0x475569, // Monolithic uniform fixed gray/slate
-            roughness: 0.5
-          });
-          const mesh = new THREE.Mesh(geom, mat);
-          mesh.position.set(
-            c.x - (c.resolution / 2) + sx * 0.05 + 0.025,
-            c.y - (c.resolution / 2) + sy * 0.05 + 0.025,
-            c.elevation_mean
-          );
-          leftCellsGroup.add(mesh);
-        }
-      }
-    });
-    sceneLeft.add(leftCellsGroup);
-
-    // Populate Right (VISTAR Variable Resolution Cells)
-    const rightCellsGroup = new THREE.Group();
-    rawCells.forEach(c => {
-      const res = c.resolution;
-      const geom = new THREE.BoxGeometry(res * 0.94, res * 0.94, 0.10);
-      let col = 0x334155;
-      if (res === 0.05) col = 0x00e5ff;
-      else if (res === 0.10) col = 0x3b82f6;
-      else if (res === 0.20) col = 0x64748b;
-
-      if (c.is_refined) col = 0xf59e0b; // Refined cell in amber
-
-      const mat = new THREE.MeshStandardMaterial({ color: col, roughness: 0.3 });
-      const mesh = new THREE.Mesh(geom, mat);
-      mesh.position.set(c.x, c.y, c.elevation_mean);
-      rightCellsGroup.add(mesh);
-    });
-    sceneRight.add(rightCellsGroup);
+    sceneLeft.add(buildPointCloud(pointValues, 0x38bdf8, 0.16, 0.85));
+    sceneLeft.add(buildFixedComparisonCells(pointValues));
+    sceneRight.add(buildPointCloud(pointValues, 0x64748b, 0.11, 0.30));
+    sceneRight.add(buildAdaptiveComparisonCells(rawCells));
+    sceneLeft.add(buildRoute(results.vis_payload.route_waypoints, 0xf59e0b));
+    sceneRight.add(buildRoute(results.vis_payload.route_waypoints, 0x00e5ff));
 
     function syncCameras() {
       const { radius, theta, phi, target } = sharedPolar;
@@ -175,9 +148,85 @@ export const ComparisonSplitView: React.FC<ComparisonSplitViewProps> = ({ result
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('resize', handleResize);
+      disposeScene(sceneLeft);
+      disposeScene(sceneRight);
       rendererLeft.dispose();
       rendererRight.dispose();
     };
+
+    function buildFixedComparisonCells(points: number[]): THREE.Group {
+      const buckets = new Map<string, { x: number; y: number; z: number }>();
+      for (let i = 0; i < points.length; i += 3) {
+        const x = Math.floor(points[i] / 0.25) * 0.25 + 0.125;
+        const y = Math.floor(points[i + 1] / 0.25) * 0.25 + 0.125;
+        const key = `${x}:${y}`;
+        if (!buckets.has(key)) buckets.set(key, { x, y, z: points[i + 2] });
+      }
+      const items = [...buckets.values()].slice(0, 6000);
+
+      const group = new THREE.Group();
+      const mesh = new THREE.InstancedMesh(
+        new THREE.BoxGeometry(0.22, 0.22, 0.10),
+        new THREE.MeshBasicMaterial({ color: 0x22d3ee }),
+        items.length
+      );
+      const dummy = new THREE.Object3D();
+      items.forEach((item, index) => {
+        dummy.position.set(item.x, item.y, item.z);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(index, dummy.matrix);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+      group.add(mesh);
+      return group;
+    }
+
+    function buildAdaptiveComparisonCells(cells: PipelineResults['vis_payload']['cells']): THREE.Group {
+      const group = new THREE.Group();
+      const buckets = new Map<string, { color: number; items: PipelineResults['vis_payload']['cells'] }>();
+      cells.forEach(cell => {
+        const color = cell.is_refined
+          ? 0xf59e0b
+          : cell.resolution <= 0.05
+            ? 0x00e5ff
+            : cell.resolution <= 0.10
+              ? 0x3b82f6
+              : cell.resolution <= 0.20
+                ? 0x64748b
+                : 0x334155;
+        const key = `${color}:${cell.resolution}`;
+        if (!buckets.has(key)) buckets.set(key, { color, items: [] });
+        buckets.get(key)!.items.push(cell);
+      });
+
+      const dummy = new THREE.Object3D();
+      buckets.forEach(({ color, items }) => {
+        const resolution = items[0].resolution;
+        const mesh = new THREE.InstancedMesh(
+          new THREE.BoxGeometry(resolution * 0.94, resolution * 0.94, 0.1),
+          new THREE.MeshStandardMaterial({ color, roughness: 0.3 }),
+          items.length
+        );
+        items.forEach((cell, index) => {
+          dummy.position.set(cell.x, cell.y, cell.elevation_mean);
+          dummy.updateMatrix();
+          mesh.setMatrixAt(index, dummy.matrix);
+        });
+        mesh.instanceMatrix.needsUpdate = true;
+        group.add(mesh);
+      });
+      return group;
+    }
+
+    function disposeScene(scene: THREE.Scene): void {
+      scene.traverse(object => {
+        const mesh = object as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose();
+        const material = mesh.material;
+        if (Array.isArray(material)) material.forEach(item => item.dispose());
+        else if (material) material.dispose();
+      });
+    }
   }, [results]);
 
   return (
@@ -204,14 +253,16 @@ export const ComparisonSplitView: React.FC<ComparisonSplitViewProps> = ({ result
             <span className="text-cyan-400 font-bold">-{comp.memory_reduction_percentage}%</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-slate-400">Processing Ratio:</span>
-            <span className="text-slate-200">{comp.speedup_ratio}x</span>
+            <span className="text-slate-400">Fixed / Adaptive Time:</span>
+            <span className="text-slate-200">
+              {(fixed.processing_time_ms / Math.max(0.01, vistar.processing_time_ms)).toFixed(2)}x
+            </span>
           </div>
         </div>
       </div>
 
       {/* Split Screens */}
-      <div className="flex-1 grid grid-cols-2 relative min-h-0">
+      <div className="flex-1 grid grid-cols-2 relative min-h-[260px]">
         {/* Left Side: Conventional Fixed 5 cm Map */}
         <div className="relative border-r border-slate-800 overflow-hidden flex flex-col">
           <div className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded bg-slate-900/90 border border-slate-700/80 backdrop-blur font-mono text-xs shadow-lg">
@@ -221,6 +272,7 @@ export const ComparisonSplitView: React.FC<ComparisonSplitViewProps> = ({ result
               <div>Allocated Cells: <span className="text-amber-400 font-bold">{fixed.cell_count.toLocaleString()}</span></div>
               <div>Memory Footprint: <span className="text-amber-400 font-bold">{fixed.memory_mb} MB</span></div>
               <div>Processing Latency: <span className="text-slate-200">{fixed.processing_time_ms} ms</span></div>
+              <div>Rendered Samples: <span className="text-cyan-300">6,000 max</span></div>
             </div>
           </div>
           <div ref={containerLeftRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
@@ -250,3 +302,45 @@ export const ComparisonSplitView: React.FC<ComparisonSplitViewProps> = ({ result
     </div>
   );
 };
+
+function getBounds(points: number[]) {
+  const bounds = {
+    minX: Infinity, maxX: -Infinity,
+    minY: Infinity, maxY: -Infinity,
+    minZ: Infinity, maxZ: -Infinity,
+  };
+  for (let i = 0; i < points.length; i += 3) {
+    bounds.minX = Math.min(bounds.minX, points[i]);
+    bounds.maxX = Math.max(bounds.maxX, points[i]);
+    bounds.minY = Math.min(bounds.minY, points[i + 1]);
+    bounds.maxY = Math.max(bounds.maxY, points[i + 1]);
+    bounds.minZ = Math.min(bounds.minZ, points[i + 2]);
+    bounds.maxZ = Math.max(bounds.maxZ, points[i + 2]);
+  }
+  return bounds;
+}
+
+function buildPointCloud(
+  points: number[],
+  color: number,
+  size: number,
+  opacity: number
+): THREE.Points {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+  return new THREE.Points(
+    geometry,
+    new THREE.PointsMaterial({ color, size, sizeAttenuation: true, transparent: opacity < 1, opacity })
+  );
+}
+
+function buildRoute(waypoints: [number, number, number][], color: number): THREE.Object3D {
+  if (waypoints.length < 2) return new THREE.Group();
+  const geometry = new THREE.BufferGeometry().setFromPoints(
+    waypoints.map(([x, y, z]) => new THREE.Vector3(x, y, z + 0.18))
+  );
+  return new THREE.Line(
+    geometry,
+    new THREE.LineBasicMaterial({ color, linewidth: 2, transparent: true, opacity: 0.95 })
+  );
+}

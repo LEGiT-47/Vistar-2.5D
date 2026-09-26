@@ -56,7 +56,9 @@ class VistarPipeline:
         }
 
         # Stage 2 & 3: Downsample / Filter
-        filtered_points, filter_stats = filter_point_cloud(raw_points, voxel_size=0.06)
+        filtered_points, filter_stats, filtered_indices = filter_point_cloud(
+            raw_points, voxel_size=0.06, return_indices=True
+        )
         results["stage_2_filter"] = filter_stats
 
         # Stage 4: Ground & Terrain Extraction
@@ -67,7 +69,7 @@ class VistarPipeline:
         # Match or resample labels to filtered points
         if ground_truth_labels is not None and len(ground_truth_labels) == raw_count:
             # Subsample labels if filtered
-            pts_labels = ground_truth_labels[:len(filtered_points)]
+            pts_labels = ground_truth_labels[filtered_indices]
         else:
             pts_labels = None
 
@@ -85,8 +87,13 @@ class VistarPipeline:
         trusted_semantics = semantic_labels[trusted_mask]
 
         # Stage 7: Dynamic Object Detection
+        trusted_dynamic_labels = (
+            dynamic_labels[filtered_indices][trusted_mask]
+            if dynamic_labels is not None and len(dynamic_labels) == raw_count
+            else None
+        )
         dyn_probs, is_dyn_mask, dyn_stats = self.dynamic_detector.analyze_dynamics(
-            trusted_points, trusted_semantics, timestamp=timestamp
+            trusted_points, trusted_semantics, dynamic_labels=trusted_dynamic_labels, timestamp=timestamp
         )
         results["stage_6_dynamic"] = dyn_stats
 

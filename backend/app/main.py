@@ -22,9 +22,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
+cors_origins = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "*").split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +36,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 SCENARIOS_DIR = ROOT_DIR / "data" / "scenarios"
 
 pipeline_instances: Dict[str, VistarPipeline] = {}
+scenario_frame_cache: Dict[str, tuple] = {}
 
 def get_pipeline(scenario_id: str) -> VistarPipeline:
     if scenario_id not in pipeline_instances:
@@ -41,12 +44,18 @@ def get_pipeline(scenario_id: str) -> VistarPipeline:
     return pipeline_instances[scenario_id]
 
 def load_scenario_frame(scenario_id: str) -> tuple:
+    cached = scenario_frame_cache.get(scenario_id)
+    if cached is not None:
+        return cached
+
     sc_folder = SCENARIOS_DIR / scenario_id
     npz_file = sc_folder / "frames" / "frame_000.npz"
     if not npz_file.exists():
         raise HTTPException(status_code=404, detail=f"Frame data for scenario {scenario_id} not found")
-    data = np.load(npz_file)
-    return data["points"], data["labels"], data["dynamic"]
+    with np.load(npz_file) as data:
+        frame = (data["points"], data["labels"], data["dynamic"])
+    scenario_frame_cache[scenario_id] = frame
+    return frame
 
 def load_scenario_metadata(scenario_id: str) -> dict:
     meta_file = SCENARIOS_DIR / scenario_id / "metadata.json"
@@ -105,7 +114,8 @@ async def process_scenario(scenario_id: str, req: ProcessRequest = ProcessReques
     start_pt = req.start_point or meta.get("start", [0.0, 0.0])
     goal_pt = req.goal_point or meta.get("goal", [20.0, 2.0])
 
-    results = pipeline.run_full_pipeline(
+    results = await asyncio.to_thread(
+        pipeline.run_full_pipeline,
         raw_points=points,
         ground_truth_labels=labels,
         dynamic_labels=dyn,

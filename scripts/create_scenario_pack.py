@@ -4,6 +4,7 @@ Generates realistic LiDAR frames, semantic annotations, dynamic objects, and met
 
 import os
 import json
+import zlib
 import numpy as np
 import sys
 from pathlib import Path
@@ -13,7 +14,6 @@ sys.path.insert(0, str(root_dir))
 
 # Common ontology references
 from backend.app.processing.semantics.ontology import SemanticClass
-from scripts.lidar_generator import generate_spinning_lidar_points
 
 SCENARIOS = [
     {
@@ -30,6 +30,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "paved_road",
+        "point_budget": 28000,
         "start": [0.0, 0.0],
         "goal": [22.0, 3.5]
     },
@@ -47,6 +48,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "asphalt_highway",
+        "point_budget": 9000,
         "start": [0.0, 0.0],
         "goal": [35.0, 0.0]
     },
@@ -64,6 +66,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "residential_curbs",
+        "point_budget": 6500,
         "start": [0.0, 0.0],
         "goal": [18.0, -2.5]
     },
@@ -81,6 +84,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "paved_concrete",
+        "point_budget": 18000,
         "start": [0.0, 0.0],
         "goal": [20.0, 4.0]
     },
@@ -98,6 +102,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "paved_tropical",
+        "point_budget": 16000,
         "start": [0.0, 0.0],
         "goal": [24.0, 2.0]
     },
@@ -115,6 +120,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "wide_asphalt",
+        "point_budget": 22000,
         "start": [0.0, 0.0],
         "goal": [28.0, 5.0]
     },
@@ -132,6 +138,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "mud_and_ruts",
+        "point_budget": 12500,
         "start": [0.0, 0.0],
         "goal": [22.0, 3.0]
     },
@@ -149,6 +156,7 @@ SCENARIOS = [
         "has_smoke": True,
         "is_synthetic_stress": False,
         "terrain_type": "paved_exhaust",
+        "point_budget": 10000,
         "start": [0.0, 0.0],
         "goal": [20.0, 1.5]
     },
@@ -166,6 +174,7 @@ SCENARIOS = [
         "has_smoke": True,
         "is_synthetic_stress": False,
         "terrain_type": "wet_asphalt",
+        "point_budget": 7000,
         "start": [0.0, 0.0],
         "goal": [25.0, 0.0]
     },
@@ -183,6 +192,7 @@ SCENARIOS = [
         "has_smoke": True,
         "is_synthetic_stress": False,
         "terrain_type": "snow_banks",
+        "point_budget": 5500,
         "start": [0.0, 0.0],
         "goal": [22.0, 2.0]
     },
@@ -200,6 +210,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "cobblestone",
+        "point_budget": 4500,
         "start": [0.0, 0.0],
         "goal": [19.0, 1.0]
     },
@@ -217,6 +228,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "autobahn_concrete",
+        "point_budget": 14500,
         "start": [0.0, 0.0],
         "goal": [30.0, 4.0]
     },
@@ -234,6 +246,7 @@ SCENARIOS = [
         "has_smoke": False,
         "is_synthetic_stress": False,
         "terrain_type": "roundabout",
+        "point_budget": 26000,
         "start": [0.0, 0.0],
         "goal": [22.0, -3.0]
     },
@@ -251,6 +264,7 @@ SCENARIOS = [
         "has_smoke": True,
         "is_synthetic_stress": True,
         "terrain_type": "dirt_and_dust",
+        "point_budget": 12000,
         "start": [0.0, 0.0],
         "goal": [25.0, 2.5]
     },
@@ -269,25 +283,95 @@ SCENARIOS = [
         "is_synthetic_stress": False,
         "terrain_type": "mountain_trail",
         "start": [0.0, 0.0],
-        "goal": [26.0, 6.0]
+        "goal": [26.0, 6.0],
+        "point_budget": 8000
+    },
+    {
+        "id": "scenario_16_lightweight_campus",
+        "title": "Lightweight Campus Scout",
+        "dataset": "VISTAR Compact Replay",
+        "environment": "Pedestrian Campus Service Lane",
+        "challenge": "Fast Interactive Mapping with a Compact LiDAR Return Set",
+        "lidar_source": "Compact 16-beam LiDAR profile",
+        "description": "A deliberately lightweight campus route with sparse returns for low-latency operator replay.",
+        "license": "VISTAR-2.5D Open Benchmark",
+        "source_url": "https://github.com/vistar-2-5d",
+        "scene_type": "campus_lightweight",
+        "has_smoke": False,
+        "is_synthetic_stress": False,
+        "terrain_type": "paved_campus",
+        "point_budget": 2400,
+        "start": [0.0, 0.0],
+        "goal": [16.0, 1.5]
     }
 ]
 
+SCENE_SIGNATURES = {
+    "urban_dense": "Dense arterial: facade blocks + crossing traffic",
+    "highway": "Open highway: twin guardrails + long vehicle corridor",
+    "residential": "Residential street: detached houses + parked-car pockets",
+    "urban_canyon": "Urban canyon: tall towers + narrow street view",
+    "tropical_urban": "Tropical boulevard: canopy clusters + central divider",
+    "wide_intersection": "Four-way junction: signal poles + cross traffic",
+    "rugged_offroad": "Rugged trail: mud ruts + boulders + puddles",
+    "aerosol_exhaust": "Exhaust scene: truck corridor + aerosol plume",
+    "rain_spray": "Rain corridor: wet road + raised barriers + spray",
+    "snow_clutter": "Snow highway: snowbanks + roadside clutter",
+    "historic_cobble": "Historic lane: low stone walls + cobblestones",
+    "autobahn_ramp": "Interchange ramp: parallel barriers + merge traffic",
+    "roundabout_stress": "Roundabout: circular island + radial traffic",
+    "dust_stress": "Dust track: scattered rocks + ghost returns",
+    "mountain_foothill": "Mountain trail: rising slope + rock outcrops",
+    "campus_lightweight": "Campus scout: compact trees + pedestrian furniture",
+}
+
 def generate_point_cloud_for_scenario(scenario: dict) -> tuple:
     """Generates physically grounded 3D points, semantic labels, dynamic labels, and intensities."""
-    np.random.seed(abs(hash(scenario["id"])) % (2**32))
+    np.random.seed(zlib.crc32(scenario["id"].encode("utf-8")))
     
     scene = scenario["scene_type"]
-    num_pts = 16000
+    num_pts = int(scenario.get("point_budget", 16000))
     points = []
     labels = []
     dynamic = []
     intensity = []
 
+    profile = {
+        "urban_dense": (34.0, "radial", 0.16, 0.08, 0.14),
+        "highway": (48.0, "corridor", 0.10, 0.04, 0.05),
+        "residential": (28.0, "street", 0.12, 0.16, 0.04),
+        "urban_canyon": (30.0, "canyon", 0.30, 0.03, 0.08),
+        "tropical_urban": (32.0, "street", 0.15, 0.25, 0.06),
+        "wide_intersection": (42.0, "intersection", 0.18, 0.10, 0.12),
+        "rugged_offroad": (36.0, "radial", 0.08, 0.28, 0.08),
+        "aerosol_exhaust": (30.0, "street", 0.14, 0.06, 0.08),
+        "rain_spray": (38.0, "corridor", 0.10, 0.06, 0.05),
+        "snow_clutter": (44.0, "corridor", 0.08, 0.04, 0.04),
+        "historic_cobble": (24.0, "canyon", 0.26, 0.06, 0.05),
+        "autobahn_ramp": (46.0, "corridor", 0.12, 0.03, 0.07),
+        "roundabout_stress": (34.0, "intersection", 0.16, 0.08, 0.22),
+        "dust_stress": (40.0, "radial", 0.08, 0.03, 0.06),
+        "mountain_foothill": (52.0, "mountain", 0.06, 0.30, 0.05),
+        "campus_lightweight": (18.0, "street", 0.08, 0.20, 0.03),
+    }
+    range_max, layout, structure_ratio, vegetation_ratio, dynamic_ratio = profile.get(
+        scene, (40.0, "radial", 0.15, 0.10, 0.08)
+    )
+
     # 1. Ground plane generation (rings/grid)
-    n_ground = int(num_pts * 0.55)
-    r = np.random.uniform(1.0, 45.0, n_ground)
-    theta = np.random.uniform(-np.pi, np.pi, n_ground)
+    n_ground = int(num_pts * (1.0 - structure_ratio - vegetation_ratio - dynamic_ratio))
+    r = np.random.uniform(1.0, range_max, n_ground)
+    if layout in {"corridor", "canyon"}:
+        theta = np.random.normal(0.0, 0.18, n_ground)
+    elif layout == "street":
+        theta = np.random.normal(0.0, 0.35, n_ground)
+    elif layout == "intersection":
+        branch = np.random.choice([0.0, np.pi / 2], n_ground)
+        theta = branch + np.random.normal(0.0, 0.12, n_ground)
+    elif layout == "mountain":
+        theta = np.random.uniform(-np.pi * 0.7, np.pi * 0.7, n_ground)
+    else:
+        theta = np.random.uniform(-np.pi, np.pi, n_ground)
     gx = r * np.cos(theta)
     gy = r * np.sin(theta)
     
@@ -330,58 +414,110 @@ def generate_point_cloud_for_scenario(scenario: dict) -> tuple:
     dynamic.append(np.zeros(n_ground, dtype=np.int32))
     intensity.append(np.random.uniform(0.3, 0.8, n_ground))
 
-    # 2. Buildings / Walls / Guardrails along sides
-    n_struct = int(num_pts * 0.22)
-    side = np.random.choice([-1.0, 1.0], n_struct)
-    sx = np.random.uniform(2.0, 42.0, n_struct)
-    sy = side * np.random.uniform(6.5, 14.0, n_struct)
-    sz = np.random.uniform(-1.5, 5.0, n_struct)
-    points.append(np.column_stack([sx, sy, sz]))
-    labels.append(np.full(n_struct, SemanticClass.BUILDING if "urban" in scene or "residential" in scene else SemanticClass.WALL))
-    dynamic.append(np.zeros(n_struct, dtype=np.int32))
-    intensity.append(np.random.uniform(0.4, 0.9, n_struct))
+    # 2-4. Scene-specific landmarks. Each archetype intentionally uses a
+    # different spatial arrangement so the comparison view is not just a
+    # recolored copy of the same road, blocks, and cars.
+    n_struct = max(8, int(num_pts * structure_ratio))
+    n_veg = max(4, int(num_pts * vegetation_ratio))
+    n_dyn = max(3, int(num_pts * dynamic_ratio))
 
-    # 3. Trees / Foliage
-    n_veg = int(num_pts * 0.10)
-    vx = np.random.uniform(4.0, 38.0, n_veg)
-    vy = np.random.choice([-1.0, 1.0], n_veg) * np.random.uniform(4.8, 9.0, n_veg)
-    vz = np.random.uniform(-0.5, 4.2, n_veg)
-    points.append(np.column_stack([vx, vy, vz]))
-    labels.append(np.full(n_veg, SemanticClass.VEGETATION))
-    dynamic.append(np.zeros(n_veg, dtype=np.int32))
-    intensity.append(np.random.uniform(0.15, 0.45, n_veg))
+    def append_points(xyz, semantic, is_dynamic=False, signal=(0.5, 0.8)):
+        points.append(np.asarray(xyz, dtype=np.float32))
+        labels.append(np.full(len(xyz), semantic, dtype=np.int32))
+        dynamic.append(np.full(len(xyz), int(is_dynamic), dtype=np.int32))
+        intensity.append(np.random.uniform(signal[0], signal[1], len(xyz)))
 
-    # 4. Dynamic Objects (Moving Vehicles, Pedestrians, Cyclists)
-    n_dyn = int(num_pts * 0.08)
-    # Vehicle 1: Lead moving car ahead [x=14m, y=1.2m]
-    v1_x = np.random.uniform(13.0, 17.5, n_dyn // 3)
-    v1_y = np.random.uniform(0.5, 2.2, n_dyn // 3)
-    v1_z = np.random.uniform(-1.4, 0.2, n_dyn // 3)
-    
-    # Vehicle 2: Oncoming or cross car [x=24m, y=-2.0m]
-    v2_x = np.random.uniform(22.0, 26.5, n_dyn // 3)
-    v2_y = np.random.uniform(-3.0, -1.0, n_dyn // 3)
-    v2_z = np.random.uniform(-1.4, 0.2, n_dyn // 3)
-    
-    # Pedestrian / Cyclist [x=8m, y=-2.8m]
-    p_x = np.random.uniform(7.8, 8.8, n_dyn - 2 * (n_dyn // 3))
-    p_y = np.random.uniform(-3.2, -2.6, n_dyn - 2 * (n_dyn // 3))
-    p_z = np.random.uniform(-1.5, 0.4, len(p_x))
+    def add_box(count, x_range, y_range, z_range, semantic):
+        xyz = np.column_stack([
+            np.random.uniform(*x_range, count),
+            np.random.uniform(*y_range, count),
+            np.random.uniform(*z_range, count),
+        ])
+        append_points(xyz, semantic)
 
-    dyn_pts = np.vstack([
-        np.column_stack([v1_x, v1_y, v1_z]),
-        np.column_stack([v2_x, v2_y, v2_z]),
-        np.column_stack([p_x, p_y, p_z])
-    ])
-    dyn_labels = np.concatenate([
-        np.full(len(v1_x), SemanticClass.VEHICLE),
-        np.full(len(v2_x), SemanticClass.VEHICLE),
-        np.full(len(p_x), SemanticClass.PEDESTRIAN)
-    ])
-    points.append(dyn_pts)
-    labels.append(dyn_labels)
-    dynamic.append(np.ones(len(dyn_pts), dtype=np.int32))
-    intensity.append(np.random.uniform(0.6, 0.95, len(dyn_pts)))
+    if scene in {"urban_dense", "urban_canyon"}:
+        # Continuous facade walls, with the canyon using much taller towers.
+        height = (0.0, 16.0) if scene == "urban_canyon" else (-1.4, 7.0)
+        for side in (-1.0, 1.0):
+            add_box(n_struct // 2, (2.0, range_max), (side * 14.0, side * 7.0), height, SemanticClass.BUILDING)
+    elif scene == "residential":
+        # Separated low houses with front yards rather than a solid wall.
+        for x in np.linspace(4.0, min(range_max - 2.0, 24.0), 5):
+            for side in (-1.0, 1.0):
+                add_box(max(4, n_struct // 10), (x - 1.2, x + 1.2), (side * 10.0, side * 6.5), (-1.4, 2.5), SemanticClass.BUILDING)
+    elif scene in {"highway", "autobahn_ramp", "rain_spray", "snow_clutter"}:
+        # Long parallel barriers; weather scenes add a different raised edge.
+        for side in (-1.0, 1.0):
+            add_box(n_struct // 2, (1.0, range_max), (side * 5.6, side * 5.1), (-1.3, 0.0), SemanticClass.WALL)
+        if scene == "snow_clutter":
+            add_box(n_struct // 3, (4.0, range_max * 0.9), (-9.0, -6.5), (-1.4, 1.2), SemanticClass.OBSTACLE)
+            add_box(n_struct // 3, (4.0, range_max * 0.9), (6.5, 9.0), (-1.4, 1.2), SemanticClass.OBSTACLE)
+    elif scene in {"tropical_urban", "campus_lightweight"}:
+        # Discrete canopy clusters and slim trunks, not buildings on both sides.
+        tree_x = np.random.uniform(3.0, range_max * 0.9, n_veg)
+        tree_y = np.random.choice([-1.0, 1.0], n_veg) * np.random.uniform(5.0, 12.0, n_veg)
+        tree_z = np.random.uniform(1.0, 8.0, n_veg)
+        append_points(np.column_stack([tree_x, tree_y, tree_z]), SemanticClass.VEGETATION, signal=(0.15, 0.45))
+        add_box(n_struct, (3.0, range_max * 0.8), (-4.0, 4.0), (-1.2, 0.8), SemanticClass.WALL)
+    elif scene == "wide_intersection":
+        # Four approach arms plus signal poles around the junction.
+        for x0, y0 in ((range_max * 0.55, 0.0), (0.0, range_max * 0.55), (range_max * 0.55, 0.0), (0.0, -range_max * 0.55)):
+            add_box(n_struct // 8, (x0 - 1.0, x0 + 1.0), (y0 - 8.0, y0 + 8.0), (-1.4, 4.5), SemanticClass.OBSTACLE)
+    elif scene in {"rugged_offroad", "dust_stress", "mountain_foothill"}:
+        # Scattered boulders and rock outcrops define an off-road scene.
+        bx = np.random.uniform(3.0, range_max, n_struct)
+        by = np.random.uniform(-11.0, 11.0, n_struct)
+        bz = np.random.uniform(-1.2, 2.5 if scene != "mountain_foothill" else 7.0, n_struct)
+        append_points(np.column_stack([bx, by, bz]), SemanticClass.OBSTACLE)
+    elif scene == "historic_cobble":
+        # Low irregular stone walls with an open street center.
+        add_box(n_struct // 2, (2.0, range_max), (-9.0, -6.5), (-1.4, 3.0), SemanticClass.WALL)
+        add_box(n_struct // 2, (2.0, range_max), (6.5, 9.0), (-1.4, 3.0), SemanticClass.WALL)
+    elif scene == "roundabout_stress":
+        # Circular central island and radial approaches.
+        angles = np.random.uniform(0.0, 2.0 * np.pi, n_struct)
+        radius = np.random.uniform(4.0, 6.0, n_struct)
+        append_points(np.column_stack([12.0 + radius * np.cos(angles), radius * np.sin(angles), np.random.uniform(-1.3, 0.6, n_struct)]), SemanticClass.WALL)
+    else:
+        add_box(n_struct, (2.0, range_max), (-10.0, 10.0), (-1.4, 4.0), SemanticClass.WALL)
+
+    if scene not in {"tropical_urban", "campus_lightweight"}:
+        vx = np.random.uniform(3.0, range_max * 0.9, n_veg)
+        vy = np.random.uniform(-10.0, 10.0, n_veg)
+        vz = np.random.uniform(0.0, 7.0, n_veg)
+        append_points(np.column_stack([vx, vy, vz]), SemanticClass.VEGETATION, signal=(0.15, 0.45))
+    elif scene == "campus_lightweight":
+        add_box(n_veg, (3.0, range_max * 0.9), (-8.0, 8.0), (-1.2, 1.0), SemanticClass.OBSTACLE)
+
+    if scene == "roundabout_stress":
+        angles = np.random.uniform(0.0, 2.0 * np.pi, n_dyn)
+        radius = np.random.uniform(7.0, 11.0, n_dyn)
+        dyn_pts = np.column_stack([12.0 + radius * np.cos(angles), radius * np.sin(angles), np.random.uniform(-1.4, 0.3, n_dyn)])
+    elif scene == "wide_intersection":
+        dyn_pts = np.column_stack([
+            np.random.uniform(5.0, 24.0, n_dyn),
+            np.random.choice([-1.0, 1.0], n_dyn) * np.random.uniform(0.5, 4.0, n_dyn),
+            np.random.uniform(-1.4, 0.4, n_dyn),
+        ])
+    elif scene in {"highway", "autobahn_ramp", "rain_spray", "snow_clutter"}:
+        dyn_pts = np.column_stack([
+            np.random.uniform(6.0, range_max, n_dyn),
+            np.random.uniform(-2.8, 2.8, n_dyn),
+            np.random.uniform(-1.4, 0.4, n_dyn),
+        ])
+    elif scene == "campus_lightweight":
+        dyn_pts = np.column_stack([
+            np.random.uniform(5.0, range_max, n_dyn),
+            np.random.uniform(-5.0, 5.0, n_dyn),
+            np.random.uniform(-1.4, 0.4, n_dyn),
+        ])
+    else:
+        dyn_pts = np.column_stack([
+            np.random.uniform(5.0, min(range_max, 26.0), n_dyn),
+            np.random.uniform(-4.0, 4.0, n_dyn),
+            np.random.uniform(-1.4, 0.4, n_dyn),
+        ])
+    append_points(dyn_pts, SemanticClass.VEHICLE, is_dynamic=True, signal=(0.6, 0.95))
 
     # 5. Smoke / Exhaust / Aerosol / Ghost returns if enabled
     if scenario["has_smoke"] or scenario["is_synthetic_stress"]:
@@ -424,7 +560,7 @@ def main():
         frames_dir.mkdir(exist_ok=True)
 
         print(f"Generating scenario pack: {sc['title']} ({sc['dataset']})...")
-        points, labels, dyn = generate_spinning_lidar_points(sc)
+        points, labels, dyn = generate_point_cloud_for_scenario(sc)
 
         # Save frame 000000.bin / npz
         np.savez_compressed(
@@ -436,6 +572,7 @@ def main():
 
         metadata = {
             **sc,
+            "scene_signature": SCENE_SIGNATURES.get(sc["scene_type"], sc["scene_type"]),
             "num_points": int(len(points)),
             "thumbnail_url": f"/thumbnails/{sc_id}.webp",
             "frame_count": 1,

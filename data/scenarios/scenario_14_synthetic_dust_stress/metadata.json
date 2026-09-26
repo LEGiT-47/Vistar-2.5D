@@ -12,6 +12,7 @@
   "has_smoke": true,
   "is_synthetic_stress": true,
   "terrain_type": "dirt_and_dust",
+  "point_budget": 12000,
   "start": [
     0.0,
     0.0
@@ -20,7 +21,8 @@
     25.0,
     2.5
   ],
-  "num_points": 24200,
+  "scene_signature": "Dust track: scattered rocks + ghost returns",
+  "num_points": 13440,
   "thumbnail_url": "/thumbnails/scenario_14_synthetic_dust_stress.webp",
   "frame_count": 1,
   "timestamp": 1718000000.0,

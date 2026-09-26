@@ -21,6 +21,7 @@ export interface ScenarioMetadata {
   has_smoke: boolean;
   is_synthetic_stress: boolean;
   terrain_type: string;
+  scene_signature?: string;
   start: [number, number];
   goal: [number, number];
   num_points?: number;

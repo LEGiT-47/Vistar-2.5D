@@ -12,6 +12,7 @@
   "has_smoke": true,
   "is_synthetic_stress": false,
   "terrain_type": "wet_asphalt",
+  "point_budget": 7000,
   "start": [
     0.0,
     0.0
@@ -20,7 +21,8 @@
     25.0,
     0.0
   ],
-  "num_points": 24200,
+  "scene_signature": "Rain corridor: wet road + raised barriers + spray",
+  "num_points": 7840,
   "thumbnail_url": "/thumbnails/scenario_09_boreas_rain.webp",
   "frame_count": 1,
   "timestamp": 1718000000.0,

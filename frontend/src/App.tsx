@@ -35,6 +35,7 @@ export function App() {
   const [results, setResults] = useState<PipelineResults | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStageLabel, setLoadingStageLabel] = useState('');
+  const [loadingElapsedSeconds, setLoadingElapsedSeconds] = useState(0);
   const [viewMode, setViewMode] = useState<ViewMode>('LIDAR_3D');
   const [isComparisonActive, setIsComparisonActive] = useState(false);
   const [currentStage, setCurrentStage] = useState(1);
@@ -44,6 +45,7 @@ export function App() {
 
   const playTimerRef = useRef<number | null>(null);
   const loadingLabelTimerRef = useRef<number | null>(null);
+  const loadingElapsedTimerRef = useRef<number | null>(null);
 
   // Load scenario list on mount
   useEffect(() => {
@@ -55,17 +57,26 @@ export function App() {
   // Animate the loading stage labels while pipeline runs
   const startLoadingAnimation = () => {
     let idx = 0;
+    const startedAt = performance.now();
     setLoadingStageLabel(LOADING_STAGES[0]);
+    setLoadingElapsedSeconds(0);
     loadingLabelTimerRef.current = window.setInterval(() => {
       idx = (idx + 1) % LOADING_STAGES.length;
       setLoadingStageLabel(LOADING_STAGES[idx]);
     }, 900);
+    loadingElapsedTimerRef.current = window.setInterval(() => {
+      setLoadingElapsedSeconds(Math.floor((performance.now() - startedAt) / 1000));
+    }, 250);
   };
 
   const stopLoadingAnimation = () => {
     if (loadingLabelTimerRef.current) {
       clearInterval(loadingLabelTimerRef.current);
       loadingLabelTimerRef.current = null;
+    }
+    if (loadingElapsedTimerRef.current) {
+      clearInterval(loadingElapsedTimerRef.current);
+      loadingElapsedTimerRef.current = null;
     }
   };
 
@@ -177,33 +188,58 @@ export function App() {
       ) : (
         <div className="flex-1 flex flex-col relative min-h-0">
 
-          {/* ── Full-screen loading overlay while pipeline runs ── */}
+          {/* ── Blocking modal while the perception pipeline runs ── */}
           {isLoading && (
-            <div className="absolute inset-0 z-50 bg-slate-950/95 backdrop-blur flex flex-col items-center justify-center gap-6">
-              {/* Pulsing radar ring */}
-              <div className="relative w-24 h-24 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full border-2 border-cyan-500/20 animate-ping" />
-                <div className="absolute inset-2 rounded-full border-2 border-cyan-400/40 animate-ping" style={{ animationDelay: '0.3s' }} />
-                <div className="absolute inset-4 rounded-full border-2 border-cyan-300/60 animate-ping" style={{ animationDelay: '0.6s' }} />
-                <div className="w-4 h-4 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/60" />
-              </div>
-
-              <div className="text-center space-y-2">
-                <div className="text-cyan-400 font-bold text-sm tracking-widest uppercase">
-                  VISTAR-2.5D Pipeline Running
+            <div
+              className="fixed inset-0 flex items-center justify-center p-6"
+              style={{
+                zIndex: 2147483647,
+                isolation: 'isolate',
+                backgroundColor: 'rgba(2, 6, 23, 0.88)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+              }}
+              role="status"
+              aria-live="polite"
+              aria-label="Processing LiDAR pipeline"
+            >
+              <div
+                className="w-full max-w-xl rounded-2xl px-8 py-10 flex flex-col items-center gap-7"
+                style={{
+                  backgroundColor: '#0f172a',
+                  border: '2px solid rgba(34, 211, 238, 0.75)',
+                  boxShadow: '0 25px 80px rgba(0, 0, 0, 0.75), 0 0 40px rgba(8, 145, 178, 0.25)',
+                }}
+              >
+                {/* Pulsing radar ring */}
+                <div className="relative w-32 h-32 flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full border-2 border-cyan-500/20 animate-ping" />
+                  <div className="absolute inset-3 rounded-full border-2 border-cyan-400/40 animate-ping" style={{ animationDelay: '0.3s' }} />
+                  <div className="absolute inset-7 rounded-full border-2 border-cyan-300/60 animate-ping" style={{ animationDelay: '0.6s' }} />
+                  <div className="w-5 h-5 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/60" />
                 </div>
-                <div className="text-slate-400 text-xs font-mono max-w-xs text-center">
-                  {loadingStageLabel}
+
+                <div className="text-center space-y-3">
+                  <div className="text-cyan-300 font-bold text-2xl tracking-[0.2em] uppercase">
+                    Processing pipeline
+                  </div>
+                  <div className="text-white text-lg font-semibold">
+                    LiDAR data is being processed
+                  </div>
+                  <div className="text-slate-300 text-sm font-mono">
+                    {loadingStageLabel || 'Loading scenario data…'}
+                  </div>
                 </div>
-              </div>
 
-              {/* Progress bar shimmer */}
-              <div className="w-64 h-0.5 bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent w-1/2 animate-[shimmer_1.2s_ease-in-out_infinite]" />
-              </div>
+                {/* Progress bar shimmer */}
+                <div className="w-full max-w-md h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent w-1/2 animate-[shimmer_1.2s_ease-in-out_infinite]" />
+                </div>
 
-              <div className="text-slate-600 text-[10px] font-mono">
-                {activeScenario?.title}
+                <div className="flex flex-col items-center gap-1 text-xs font-mono">
+                  <div className="text-slate-300">{activeScenario?.title}</div>
+                  <div className="text-slate-500">Elapsed: {loadingElapsedSeconds}s · Please wait</div>
+                </div>
               </div>
             </div>
           )}

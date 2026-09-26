@@ -12,6 +12,7 @@
   "has_smoke": false,
   "is_synthetic_stress": false,
   "terrain_type": "asphalt_highway",
+  "point_budget": 9000,
   "start": [
     0.0,
     0.0
@@ -20,7 +21,8 @@
     35.0,
     0.0
   ],
-  "num_points": 22000,
+  "scene_signature": "Open highway: twin guardrails + long vehicle corridor",
+  "num_points": 8999,
   "thumbnail_url": "/thumbnails/scenario_02_highway_open.webp",
   "frame_count": 1,
   "timestamp": 1718000000.0,

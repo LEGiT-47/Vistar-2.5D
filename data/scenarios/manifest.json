@@ -13,6 +13,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "paved_road",
+    "point_budget": 28000,
     "start": [
       0.0,
       0.0
@@ -21,7 +22,8 @@
       22.0,
       3.5
     ],
-    "num_points": 22000,
+    "scene_signature": "Dense arterial: facade blocks + crossing traffic",
+    "num_points": 28000,
     "thumbnail_url": "/thumbnails/scenario_01_urban_traffic.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -46,6 +48,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "asphalt_highway",
+    "point_budget": 9000,
     "start": [
       0.0,
       0.0
@@ -54,7 +57,8 @@
       35.0,
       0.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Open highway: twin guardrails + long vehicle corridor",
+    "num_points": 8999,
     "thumbnail_url": "/thumbnails/scenario_02_highway_open.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -79,6 +83,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "residential_curbs",
+    "point_budget": 6500,
     "start": [
       0.0,
       0.0
@@ -87,7 +92,8 @@
       18.0,
       -2.5
     ],
-    "num_points": 22000,
+    "scene_signature": "Residential street: detached houses + parked-car pockets",
+    "num_points": 6500,
     "thumbnail_url": "/thumbnails/scenario_03_residential.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -112,6 +118,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "paved_concrete",
+    "point_budget": 18000,
     "start": [
       0.0,
       0.0
@@ -120,7 +127,8 @@
       20.0,
       4.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Urban canyon: tall towers + narrow street view",
+    "num_points": 18000,
     "thumbnail_url": "/thumbnails/scenario_04_boston_urban.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -145,6 +153,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "paved_tropical",
+    "point_budget": 16000,
     "start": [
       0.0,
       0.0
@@ -153,7 +162,8 @@
       24.0,
       2.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Tropical boulevard: canopy clusters + central divider",
+    "num_points": 16000,
     "thumbnail_url": "/thumbnails/scenario_05_singapore_urban.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -178,6 +188,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "wide_asphalt",
+    "point_budget": 22000,
     "start": [
       0.0,
       0.0
@@ -186,7 +197,8 @@
       28.0,
       5.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Four-way junction: signal poles + cross traffic",
+    "num_points": 20020,
     "thumbnail_url": "/thumbnails/scenario_06_waymo_multicity.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -211,6 +223,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "mud_and_ruts",
+    "point_budget": 12500,
     "start": [
       0.0,
       0.0
@@ -219,7 +232,8 @@
       22.0,
       3.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Rugged trail: mud ruts + boulders + puddles",
+    "num_points": 12500,
     "thumbnail_url": "/thumbnails/scenario_07_offroad_rellis.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -244,6 +258,7 @@
     "has_smoke": true,
     "is_synthetic_stress": false,
     "terrain_type": "paved_exhaust",
+    "point_budget": 10000,
     "start": [
       0.0,
       0.0
@@ -252,7 +267,8 @@
       20.0,
       1.5
     ],
-    "num_points": 24200,
+    "scene_signature": "Exhaust scene: truck corridor + aerosol plume",
+    "num_points": 11200,
     "thumbnail_url": "/thumbnails/scenario_08_pandaset_smoke.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -277,6 +293,7 @@
     "has_smoke": true,
     "is_synthetic_stress": false,
     "terrain_type": "wet_asphalt",
+    "point_budget": 7000,
     "start": [
       0.0,
       0.0
@@ -285,7 +302,8 @@
       25.0,
       0.0
     ],
-    "num_points": 24200,
+    "scene_signature": "Rain corridor: wet road + raised barriers + spray",
+    "num_points": 7840,
     "thumbnail_url": "/thumbnails/scenario_09_boreas_rain.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -310,6 +328,7 @@
     "has_smoke": true,
     "is_synthetic_stress": false,
     "terrain_type": "snow_banks",
+    "point_budget": 5500,
     "start": [
       0.0,
       0.0
@@ -318,7 +337,8 @@
       22.0,
       2.0
     ],
-    "num_points": 24200,
+    "scene_signature": "Snow highway: snowbanks + roadside clutter",
+    "num_points": 6452,
     "thumbnail_url": "/thumbnails/scenario_10_boreas_snow.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -343,6 +363,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "cobblestone",
+    "point_budget": 4500,
     "start": [
       0.0,
       0.0
@@ -351,7 +372,8 @@
       19.0,
       1.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Historic lane: low stone walls + cobblestones",
+    "num_points": 4499,
     "thumbnail_url": "/thumbnails/scenario_11_oxford_robotcar.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -376,6 +398,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "autobahn_concrete",
+    "point_budget": 14500,
     "start": [
       0.0,
       0.0
@@ -384,7 +407,8 @@
       30.0,
       4.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Interchange ramp: parallel barriers + merge traffic",
+    "num_points": 14500,
     "thumbnail_url": "/thumbnails/scenario_12_a2d2_germany.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -409,6 +433,7 @@
     "has_smoke": false,
     "is_synthetic_stress": false,
     "terrain_type": "roundabout",
+    "point_budget": 26000,
     "start": [
       0.0,
       0.0
@@ -417,7 +442,8 @@
       22.0,
       -3.0
     ],
-    "num_points": 22000,
+    "scene_signature": "Roundabout: circular island + radial traffic",
+    "num_points": 26000,
     "thumbnail_url": "/thumbnails/scenario_13_dynamic_stress_kitti.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -442,6 +468,7 @@
     "has_smoke": true,
     "is_synthetic_stress": true,
     "terrain_type": "dirt_and_dust",
+    "point_budget": 12000,
     "start": [
       0.0,
       0.0
@@ -450,7 +477,8 @@
       25.0,
       2.5
     ],
-    "num_points": 24200,
+    "scene_signature": "Dust track: scattered rocks + ghost returns",
+    "num_points": 13440,
     "thumbnail_url": "/thumbnails/scenario_14_synthetic_dust_stress.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
@@ -483,8 +511,45 @@
       26.0,
       6.0
     ],
-    "num_points": 22000,
+    "point_budget": 8000,
+    "scene_signature": "Mountain trail: rising slope + rock outcrops",
+    "num_points": 7999,
     "thumbnail_url": "/thumbnails/scenario_15_dem_fusion_terrain.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_16_lightweight_campus",
+    "title": "Lightweight Campus Scout",
+    "dataset": "VISTAR Compact Replay",
+    "environment": "Pedestrian Campus Service Lane",
+    "challenge": "Fast Interactive Mapping with a Compact LiDAR Return Set",
+    "lidar_source": "Compact 16-beam LiDAR profile",
+    "description": "A deliberately lightweight campus route with sparse returns for low-latency operator replay.",
+    "license": "VISTAR-2.5D Open Benchmark",
+    "source_url": "https://github.com/vistar-2-5d",
+    "scene_type": "campus_lightweight",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "paved_campus",
+    "point_budget": 2400,
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      16.0,
+      1.5
+    ],
+    "scene_signature": "Campus scout: compact trees + pedestrian furniture",
+    "num_points": 2879,
+    "thumbnail_url": "/thumbnails/scenario_16_lightweight_campus.webp",
     "frame_count": 1,
     "timestamp": 1718000000.0,
     "vehicle_pose": {

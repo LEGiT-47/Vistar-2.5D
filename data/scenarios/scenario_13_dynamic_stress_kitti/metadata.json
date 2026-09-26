@@ -12,6 +12,7 @@
   "has_smoke": false,
   "is_synthetic_stress": false,
   "terrain_type": "roundabout",
+  "point_budget": 26000,
   "start": [
     0.0,
     0.0
@@ -20,7 +21,8 @@
     22.0,
     -3.0
   ],
-  "num_points": 22000,
+  "scene_signature": "Roundabout: circular island + radial traffic",
+  "num_points": 26000,
   "thumbnail_url": "/thumbnails/scenario_13_dynamic_stress_kitti.webp",
   "frame_count": 1,
   "timestamp": 1718000000.0,

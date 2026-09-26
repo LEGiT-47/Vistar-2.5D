@@ -11,8 +11,9 @@ def filter_point_cloud(
     max_range: float = 75.0,
     voxel_size: float = 0.05,
     min_z: float = -5.0,
-    max_z: float = 15.0
-) -> Tuple[np.ndarray, Dict[str, Any]]:
+    max_z: float = 15.0,
+    return_indices: bool = False
+) -> Tuple[np.ndarray, Dict[str, Any]] | Tuple[np.ndarray, Dict[str, Any], np.ndarray]:
     """Applies valid range limits, bounding box, and voxel downsampling.
     
     Args:
@@ -28,7 +29,8 @@ def filter_point_cloud(
     t0 = time.perf_counter()
     raw_count = len(points)
     if raw_count == 0:
-        return points, {"raw_count": 0, "filtered_count": 0, "removed_count": 0, "time_ms": 0.0}
+        result = (points, {"raw_count": 0, "filtered_count": 0, "removed_count": 0, "time_ms": 0.0})
+        return (*result, np.empty(0, dtype=np.int64)) if return_indices else result
 
     # 1. Coordinate check and range filtering
     xyz = points[:, :3]
@@ -40,7 +42,8 @@ def filter_point_cloud(
         (xyz[:, 2] >= min_z) &
         (xyz[:, 2] <= max_z)
     )
-    pts_ranged = points[valid_mask]
+    ranged_indices = np.flatnonzero(valid_mask)
+    pts_ranged = points[ranged_indices]
 
     # 2. Voxel grid downsampling (fast NumPy hashing)
     if voxel_size > 0 and len(pts_ranged) > 0:
@@ -48,8 +51,10 @@ def filter_point_cloud(
         # Use structured array or unique indices
         _, unique_indices = np.unique(voxel_coords, axis=0, return_index=True)
         filtered_points = pts_ranged[unique_indices]
+        filtered_indices = ranged_indices[unique_indices]
     else:
         filtered_points = pts_ranged
+        filtered_indices = ranged_indices
 
     t1 = time.perf_counter()
     dt_ms = (t1 - t0) * 1000.0
@@ -72,7 +77,7 @@ def filter_point_cloud(
         "estimated_density_pts_m2": round(float(density), 2),
         "effective_range_m": round(float(np.max(dists[valid_mask])) if np.any(valid_mask) else 0.0, 2)
     }
-    return filtered_points, stats
+    return (filtered_points, stats, filtered_indices) if return_indices else (filtered_points, stats)
 
 def compute_point_cloud_metrics(points: np.ndarray) -> Dict[str, float]:
     """Compute local elevation variation and spatial roughness."""

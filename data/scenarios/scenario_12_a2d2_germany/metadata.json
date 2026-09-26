@@ -12,6 +12,7 @@
   "has_smoke": false,
   "is_synthetic_stress": false,
   "terrain_type": "autobahn_concrete",
+  "point_budget": 14500,
   "start": [
     0.0,
     0.0
@@ -20,7 +21,8 @@
     30.0,
     4.0
   ],
-  "num_points": 22000,
+  "scene_signature": "Interchange ramp: parallel barriers + merge traffic",
+  "num_points": 14500,
   "thumbnail_url": "/thumbnails/scenario_12_a2d2_germany.webp",
   "frame_count": 1,
   "timestamp": 1718000000.0,
