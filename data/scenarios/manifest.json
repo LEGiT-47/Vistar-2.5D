@@ -1,0 +1,497 @@
+[
+  {
+    "id": "scenario_01_urban_traffic",
+    "title": "Urban Dynamic Traffic",
+    "dataset": "SemanticKITTI",
+    "environment": "Urban Arterial Corridor",
+    "challenge": "High Dynamic Object Density & Fast Intersection Crossing",
+    "lidar_source": "Velodyne HDL-64E (64-beam, 10Hz, 1.3M pts/s)",
+    "description": "Multi-lane urban traffic with moving vehicles, cyclists, and crossing pedestrians.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "http://www.semantic-kitti.org/",
+    "scene_type": "urban_dense",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "paved_road",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      22.0,
+      3.5
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_01_urban_traffic.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_02_highway_open",
+    "title": "Highway / Open Road",
+    "dataset": "KITTI / SemanticKITTI",
+    "environment": "Divided Dual-Carriageway",
+    "challenge": "High Velocity & Sparse Far-Field Returns (50m+)",
+    "lidar_source": "Velodyne HDL-64E",
+    "description": "Long straight highway segment with high-speed overtakes and distant barriers.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "http://www.cvlibs.net/datasets/kitti/",
+    "scene_type": "highway",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "asphalt_highway",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      35.0,
+      0.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_02_highway_open.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_03_residential",
+    "title": "Residential Urban Scene",
+    "dataset": "SemanticKITTI",
+    "environment": "Narrow Suburb Street",
+    "challenge": "Close-Proximity Curbs, Parked Cars, and Low Walls",
+    "lidar_source": "Velodyne HDL-64E",
+    "description": "Tree-lined residential avenue with narrow lanes and pedestrian sidewalks.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "http://www.semantic-kitti.org/",
+    "scene_type": "residential",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "residential_curbs",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      18.0,
+      -2.5
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_03_residential.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_04_boston_urban",
+    "title": "Boston Urban",
+    "dataset": "nuScenes",
+    "environment": "Downtown Boston Financial District",
+    "challenge": "Complex Urban Canyon & Tall Facade Reflections",
+    "lidar_source": "Hesai Pandar (32-beam)",
+    "description": "Dense high-rise corridor with multiple stationary and creeping vehicles.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "https://www.nuscenes.org/",
+    "scene_type": "urban_canyon",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "paved_concrete",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      20.0,
+      4.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_04_boston_urban.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_05_singapore_urban",
+    "title": "Singapore Urban",
+    "dataset": "nuScenes",
+    "environment": "Singapore One-North Tech District",
+    "challenge": "Dense Tropical Foliage Overhanging Roadway & Pedestrian Crossing",
+    "lidar_source": "Hesai Pandar (32-beam)",
+    "description": "Tropical urban boulevard with lush roadside foliage and modern structures.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "https://www.nuscenes.org/",
+    "scene_type": "tropical_urban",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "paved_tropical",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      24.0,
+      2.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_05_singapore_urban.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_06_waymo_multicity",
+    "title": "US Multi-City",
+    "dataset": "Waymo Open Dataset",
+    "environment": "Suburban Intersection & Commercial Plaza",
+    "challenge": "Multi-Sensor Cross-Coverage & Long Range Perception",
+    "lidar_source": "Waymo 5-LiDAR Array (Top 64 + 4 Perimeter)",
+    "description": "Wide American multi-lane crossroad with heavy commercial traffic.",
+    "license": "Waymo Non-Commercial License",
+    "source_url": "https://waymo.com/open/",
+    "scene_type": "wide_intersection",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "wide_asphalt",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      28.0,
+      5.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_06_waymo_multicity.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_07_offroad_rellis",
+    "title": "Off-Road Terrain",
+    "dataset": "RELLIS-3D",
+    "environment": "Texas Off-Road Unstructured Proving Ground",
+    "challenge": "Mud, Puddles, Steep Ruts, Rubble & Heavy Undulation",
+    "lidar_source": "Ouster OS1-64",
+    "description": "Genuine rugged trail with water hazards, mud pits, and high terrain roughness.",
+    "license": "BSD 3-Clause",
+    "source_url": "https://github.com/unmannedlab/RELLIS-3D",
+    "scene_type": "rugged_offroad",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "mud_and_ruts",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      22.0,
+      3.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_07_offroad_rellis.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_08_pandaset_smoke",
+    "title": "Smoke / Exhaust Plumes",
+    "dataset": "PandaSet",
+    "environment": "Silicon Valley Urban Thoroughfare",
+    "challenge": "Heavy Diesel Exhaust & Airborne Aerosol Return Rejection",
+    "lidar_source": "Hesai Pandar64 Spinning + PandarGT Solid-State",
+    "description": "Urban driving behind heavy vehicle exhaust clouds, testing low-confidence return filtering.",
+    "license": "CC BY 4.0 (Scale AI & Hesai)",
+    "source_url": "https://pandaset.org/",
+    "scene_type": "aerosol_exhaust",
+    "has_smoke": true,
+    "is_synthetic_stress": false,
+    "terrain_type": "paved_exhaust",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      20.0,
+      1.5
+    ],
+    "num_points": 24200,
+    "thumbnail_url": "/thumbnails/scenario_08_pandaset_smoke.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_09_boreas_rain",
+    "title": "Adverse Weather \u2014 Rain",
+    "dataset": "Boreas",
+    "environment": "Toronto Suburban Ring Road",
+    "challenge": "Wet Surface Scattering & Rain Drop Attenuation",
+    "lidar_source": "Aeva Aeries 4D FMCW LiDAR (128-beam equiv.)",
+    "description": "Wet asphalt with surface puddles, spray, and reduced beam reflectivity.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "https://www.boreas.utias.utoronto.ca/",
+    "scene_type": "rain_spray",
+    "has_smoke": true,
+    "is_synthetic_stress": false,
+    "terrain_type": "wet_asphalt",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      25.0,
+      0.0
+    ],
+    "num_points": 24200,
+    "thumbnail_url": "/thumbnails/scenario_09_boreas_rain.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_10_boreas_snow",
+    "title": "Adverse Weather \u2014 Snow",
+    "dataset": "Boreas",
+    "environment": "Snow-Covered Northern Highway",
+    "challenge": "Snow Banks, Concealed Curbs & Floating Snowflake Clutter",
+    "lidar_source": "Aeva Aeries 4D FMCW LiDAR",
+    "description": "Winter highway with roadside snowbanks, reduced lane definition, and airborne flakes.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "https://www.boreas.utias.utoronto.ca/",
+    "scene_type": "snow_clutter",
+    "has_smoke": true,
+    "is_synthetic_stress": false,
+    "terrain_type": "snow_banks",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      22.0,
+      2.0
+    ],
+    "num_points": 24200,
+    "thumbnail_url": "/thumbnails/scenario_10_boreas_snow.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_11_oxford_robotcar",
+    "title": "Changing Conditions",
+    "dataset": "Oxford RobotCar",
+    "environment": "Oxford Historic City Center",
+    "challenge": "Historic Cobblestone, Narrow Archways & Changing Ambient Light",
+    "lidar_source": "SICK LMS-151 + Velodyne HDL-32E",
+    "description": "Cobblestone streets with tight stone architecture and variable pedestrian flow.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "https://robotcar-dataset.robots.ox.ac.uk/",
+    "scene_type": "historic_cobble",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "cobblestone",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      19.0,
+      1.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_11_oxford_robotcar.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_12_a2d2_germany",
+    "title": "Multi-LiDAR Highway Interchange",
+    "dataset": "A2D2 (Audi Autonomous Driving)",
+    "environment": "Ingolstadt Autobahn Interchange",
+    "challenge": "5-LiDAR Sensor Overlap & High-Density Guardrails",
+    "lidar_source": "5x Velodyne VLP-16 (Front, Left, Right, Rear-Left, Rear-Right)",
+    "description": "German highway interchange with multiple synchronized LiDAR point streams.",
+    "license": "CC BY-ND 4.0",
+    "source_url": "https://www.a2d2.audi/",
+    "scene_type": "autobahn_ramp",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "autobahn_concrete",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      30.0,
+      4.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_12_a2d2_germany.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_13_dynamic_stress_kitti",
+    "title": "Dynamic Object Stress Test",
+    "dataset": "SemanticKITTI",
+    "environment": "High-Volume Roundabout & Merge",
+    "challenge": "Rapid Cross-Traffic Centroid Tracking & Terrain De-cluttering",
+    "lidar_source": "Velodyne HDL-64E",
+    "description": "Stress-testing dynamic object exclusion from persistent 2.5D terrain during fast vehicle merges.",
+    "license": "CC BY-NC-SA 4.0",
+    "source_url": "http://www.semantic-kitti.org/",
+    "scene_type": "roundabout_stress",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "roundabout",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      22.0,
+      -3.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_13_dynamic_stress_kitti.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_14_synthetic_dust_stress",
+    "title": "Synthetic Dust & Ghost Return Stress Test",
+    "dataset": "Synthetic Stress Benchmark",
+    "environment": "Arid Test Track with Severe Ghost Clutter",
+    "challenge": "Controlled Injection of 18% Aerosol Ghost Points & Floating Dust",
+    "lidar_source": "Synthetic Velodyne HDL-64E Profile",
+    "description": "Rigorous stress test verifying that low-confidence environmental returns are filtered before 2.5D projection.",
+    "license": "VISTAR-2.5D Open Benchmark",
+    "source_url": "https://github.com/vistar-2-5d",
+    "scene_type": "dust_stress",
+    "has_smoke": true,
+    "is_synthetic_stress": true,
+    "terrain_type": "dirt_and_dust",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      25.0,
+      2.5
+    ],
+    "num_points": 24200,
+    "thumbnail_url": "/thumbnails/scenario_14_synthetic_dust_stress.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  },
+  {
+    "id": "scenario_15_dem_fusion_terrain",
+    "title": "DEM Fusion Terrain Mission",
+    "dataset": "Copernicus GLO-90 + SyntheticKITTI",
+    "environment": "Foothill Mountain Trail & Broad Plateau",
+    "challenge": "Far-Field Topographic Context Fusion Outside 40m LiDAR Horizon",
+    "lidar_source": "Ouster OS2-128 + Copernicus GLO-90 DEM Tile",
+    "description": "Seamless integration of high-resolution live adaptive LiDAR with 90m macroscopic DEM context.",
+    "license": "Copernicus Open Access / CC BY 4.0",
+    "source_url": "https://spacedata.copernicus.eu/",
+    "scene_type": "mountain_foothill",
+    "has_smoke": false,
+    "is_synthetic_stress": false,
+    "terrain_type": "mountain_trail",
+    "start": [
+      0.0,
+      0.0
+    ],
+    "goal": [
+      26.0,
+      6.0
+    ],
+    "num_points": 22000,
+    "thumbnail_url": "/thumbnails/scenario_15_dem_fusion_terrain.webp",
+    "frame_count": 1,
+    "timestamp": 1718000000.0,
+    "vehicle_pose": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.6,
+      "yaw": 0.0
+    }
+  }
+]

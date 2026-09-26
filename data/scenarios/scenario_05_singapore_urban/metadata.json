@@ -1,0 +1,33 @@
+{
+  "id": "scenario_05_singapore_urban",
+  "title": "Singapore Urban",
+  "dataset": "nuScenes",
+  "environment": "Singapore One-North Tech District",
+  "challenge": "Dense Tropical Foliage Overhanging Roadway & Pedestrian Crossing",
+  "lidar_source": "Hesai Pandar (32-beam)",
+  "description": "Tropical urban boulevard with lush roadside foliage and modern structures.",
+  "license": "CC BY-NC-SA 4.0",
+  "source_url": "https://www.nuscenes.org/",
+  "scene_type": "tropical_urban",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "paved_tropical",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    24.0,
+    2.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_05_singapore_urban.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "scenario_07_offroad_rellis",
+  "title": "Off-Road Terrain",
+  "dataset": "RELLIS-3D",
+  "environment": "Texas Off-Road Unstructured Proving Ground",
+  "challenge": "Mud, Puddles, Steep Ruts, Rubble & Heavy Undulation",
+  "lidar_source": "Ouster OS1-64",
+  "description": "Genuine rugged trail with water hazards, mud pits, and high terrain roughness.",
+  "license": "BSD 3-Clause",
+  "source_url": "https://github.com/unmannedlab/RELLIS-3D",
+  "scene_type": "rugged_offroad",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "mud_and_ruts",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    22.0,
+    3.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_07_offroad_rellis.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

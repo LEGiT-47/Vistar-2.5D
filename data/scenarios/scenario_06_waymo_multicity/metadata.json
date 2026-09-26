@@ -1,0 +1,33 @@
+{
+  "id": "scenario_06_waymo_multicity",
+  "title": "US Multi-City",
+  "dataset": "Waymo Open Dataset",
+  "environment": "Suburban Intersection & Commercial Plaza",
+  "challenge": "Multi-Sensor Cross-Coverage & Long Range Perception",
+  "lidar_source": "Waymo 5-LiDAR Array (Top 64 + 4 Perimeter)",
+  "description": "Wide American multi-lane crossroad with heavy commercial traffic.",
+  "license": "Waymo Non-Commercial License",
+  "source_url": "https://waymo.com/open/",
+  "scene_type": "wide_intersection",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "wide_asphalt",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    28.0,
+    5.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_06_waymo_multicity.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

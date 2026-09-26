@@ -1,0 +1,33 @@
+{
+  "id": "scenario_08_pandaset_smoke",
+  "title": "Smoke / Exhaust Plumes",
+  "dataset": "PandaSet",
+  "environment": "Silicon Valley Urban Thoroughfare",
+  "challenge": "Heavy Diesel Exhaust & Airborne Aerosol Return Rejection",
+  "lidar_source": "Hesai Pandar64 Spinning + PandarGT Solid-State",
+  "description": "Urban driving behind heavy vehicle exhaust clouds, testing low-confidence return filtering.",
+  "license": "CC BY 4.0 (Scale AI & Hesai)",
+  "source_url": "https://pandaset.org/",
+  "scene_type": "aerosol_exhaust",
+  "has_smoke": true,
+  "is_synthetic_stress": false,
+  "terrain_type": "paved_exhaust",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    20.0,
+    1.5
+  ],
+  "num_points": 24200,
+  "thumbnail_url": "/thumbnails/scenario_08_pandaset_smoke.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

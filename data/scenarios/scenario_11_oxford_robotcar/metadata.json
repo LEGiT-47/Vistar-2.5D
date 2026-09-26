@@ -1,0 +1,33 @@
+{
+  "id": "scenario_11_oxford_robotcar",
+  "title": "Changing Conditions",
+  "dataset": "Oxford RobotCar",
+  "environment": "Oxford Historic City Center",
+  "challenge": "Historic Cobblestone, Narrow Archways & Changing Ambient Light",
+  "lidar_source": "SICK LMS-151 + Velodyne HDL-32E",
+  "description": "Cobblestone streets with tight stone architecture and variable pedestrian flow.",
+  "license": "CC BY-NC-SA 4.0",
+  "source_url": "https://robotcar-dataset.robots.ox.ac.uk/",
+  "scene_type": "historic_cobble",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "cobblestone",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    19.0,
+    1.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_11_oxford_robotcar.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

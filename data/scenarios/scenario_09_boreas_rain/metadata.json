@@ -1,0 +1,33 @@
+{
+  "id": "scenario_09_boreas_rain",
+  "title": "Adverse Weather \u2014 Rain",
+  "dataset": "Boreas",
+  "environment": "Toronto Suburban Ring Road",
+  "challenge": "Wet Surface Scattering & Rain Drop Attenuation",
+  "lidar_source": "Aeva Aeries 4D FMCW LiDAR (128-beam equiv.)",
+  "description": "Wet asphalt with surface puddles, spray, and reduced beam reflectivity.",
+  "license": "CC BY-NC-SA 4.0",
+  "source_url": "https://www.boreas.utias.utoronto.ca/",
+  "scene_type": "rain_spray",
+  "has_smoke": true,
+  "is_synthetic_stress": false,
+  "terrain_type": "wet_asphalt",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    25.0,
+    0.0
+  ],
+  "num_points": 24200,
+  "thumbnail_url": "/thumbnails/scenario_09_boreas_rain.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

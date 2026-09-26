@@ -1,0 +1,33 @@
+{
+  "id": "scenario_03_residential",
+  "title": "Residential Urban Scene",
+  "dataset": "SemanticKITTI",
+  "environment": "Narrow Suburb Street",
+  "challenge": "Close-Proximity Curbs, Parked Cars, and Low Walls",
+  "lidar_source": "Velodyne HDL-64E",
+  "description": "Tree-lined residential avenue with narrow lanes and pedestrian sidewalks.",
+  "license": "CC BY-NC-SA 4.0",
+  "source_url": "http://www.semantic-kitti.org/",
+  "scene_type": "residential",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "residential_curbs",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    18.0,
+    -2.5
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_03_residential.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "scenario_04_boston_urban",
+  "title": "Boston Urban",
+  "dataset": "nuScenes",
+  "environment": "Downtown Boston Financial District",
+  "challenge": "Complex Urban Canyon & Tall Facade Reflections",
+  "lidar_source": "Hesai Pandar (32-beam)",
+  "description": "Dense high-rise corridor with multiple stationary and creeping vehicles.",
+  "license": "CC BY-NC-SA 4.0",
+  "source_url": "https://www.nuscenes.org/",
+  "scene_type": "urban_canyon",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "paved_concrete",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    20.0,
+    4.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_04_boston_urban.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

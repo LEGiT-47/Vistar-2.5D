@@ -1,0 +1,33 @@
+{
+  "id": "scenario_12_a2d2_germany",
+  "title": "Multi-LiDAR Highway Interchange",
+  "dataset": "A2D2 (Audi Autonomous Driving)",
+  "environment": "Ingolstadt Autobahn Interchange",
+  "challenge": "5-LiDAR Sensor Overlap & High-Density Guardrails",
+  "lidar_source": "5x Velodyne VLP-16 (Front, Left, Right, Rear-Left, Rear-Right)",
+  "description": "German highway interchange with multiple synchronized LiDAR point streams.",
+  "license": "CC BY-ND 4.0",
+  "source_url": "https://www.a2d2.audi/",
+  "scene_type": "autobahn_ramp",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "autobahn_concrete",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    30.0,
+    4.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_12_a2d2_germany.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

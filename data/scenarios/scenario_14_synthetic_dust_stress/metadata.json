@@ -1,0 +1,33 @@
+{
+  "id": "scenario_14_synthetic_dust_stress",
+  "title": "Synthetic Dust & Ghost Return Stress Test",
+  "dataset": "Synthetic Stress Benchmark",
+  "environment": "Arid Test Track with Severe Ghost Clutter",
+  "challenge": "Controlled Injection of 18% Aerosol Ghost Points & Floating Dust",
+  "lidar_source": "Synthetic Velodyne HDL-64E Profile",
+  "description": "Rigorous stress test verifying that low-confidence environmental returns are filtered before 2.5D projection.",
+  "license": "VISTAR-2.5D Open Benchmark",
+  "source_url": "https://github.com/vistar-2-5d",
+  "scene_type": "dust_stress",
+  "has_smoke": true,
+  "is_synthetic_stress": true,
+  "terrain_type": "dirt_and_dust",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    25.0,
+    2.5
+  ],
+  "num_points": 24200,
+  "thumbnail_url": "/thumbnails/scenario_14_synthetic_dust_stress.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}

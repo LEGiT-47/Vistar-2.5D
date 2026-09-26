@@ -1,0 +1,33 @@
+{
+  "id": "scenario_13_dynamic_stress_kitti",
+  "title": "Dynamic Object Stress Test",
+  "dataset": "SemanticKITTI",
+  "environment": "High-Volume Roundabout & Merge",
+  "challenge": "Rapid Cross-Traffic Centroid Tracking & Terrain De-cluttering",
+  "lidar_source": "Velodyne HDL-64E",
+  "description": "Stress-testing dynamic object exclusion from persistent 2.5D terrain during fast vehicle merges.",
+  "license": "CC BY-NC-SA 4.0",
+  "source_url": "http://www.semantic-kitti.org/",
+  "scene_type": "roundabout_stress",
+  "has_smoke": false,
+  "is_synthetic_stress": false,
+  "terrain_type": "roundabout",
+  "start": [
+    0.0,
+    0.0
+  ],
+  "goal": [
+    22.0,
+    -3.0
+  ],
+  "num_points": 22000,
+  "thumbnail_url": "/thumbnails/scenario_13_dynamic_stress_kitti.webp",
+  "frame_count": 1,
+  "timestamp": 1718000000.0,
+  "vehicle_pose": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.6,
+    "yaw": 0.0
+  }
+}
