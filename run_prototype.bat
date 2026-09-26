@@ -5,8 +5,14 @@ echo   Smart India Hackathon 2026 (Problem Statement: SIH26053)
 echo ======================================================================
 echo.
 
+if exist ".venv\Scripts\python.exe" (
+  set "PYTHON=.venv\Scripts\python.exe"
+) else (
+  set "PYTHON=python"
+)
+
 echo [1/2] Starting Python FastAPI Backend on port 8000...
-start "VISTAR-2.5D Backend" cmd /k "python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000"
+start "VISTAR-2.5D Backend" cmd /k "%PYTHON% -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000"
 
 echo [2/2] Starting React Vite Frontend on port 5173...
 cd frontend

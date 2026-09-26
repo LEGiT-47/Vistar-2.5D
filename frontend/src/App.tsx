@@ -31,6 +31,7 @@ const LOADING_STAGES = [
 
 export function App() {
   const [scenarios, setScenarios] = useState<ScenarioMetadata[]>([]);
+  const [scenarioLoadError, setScenarioLoadError] = useState<string | null>(null);
   const [activeScenario, setActiveScenario] = useState<ScenarioMetadata | null>(null);
   const [results, setResults] = useState<PipelineResults | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,8 +51,16 @@ export function App() {
   // Load scenario list on mount
   useEffect(() => {
     fetchScenarios()
-      .then(data => setScenarios(data))
-      .catch(err => console.error('Error loading scenarios:', err));
+      .then(data => {
+        setScenarios(data);
+        setScenarioLoadError(null);
+      })
+      .catch(err => {
+        console.error('Error loading scenarios:', err);
+        setScenarioLoadError(
+          'Cannot load scenarios. Start the FastAPI backend on port 8000 and refresh this page.'
+        );
+      });
   }, []);
 
   // Animate the loading stage labels while pipeline runs
@@ -184,6 +193,7 @@ export function App() {
           scenarios={scenarios}
           onSelectScenario={handleSelectScenario}
           isLoading={isLoading}
+          loadError={scenarioLoadError}
         />
       ) : (
         <div className="flex-1 flex flex-col relative min-h-0">

@@ -6,9 +6,10 @@ interface ScenarioCardProps {
   scenario: ScenarioMetadata;
   onSelect: (scenario: ScenarioMetadata) => void;
   isLoading?: boolean;
+  isSmallest?: boolean;
 }
 
-export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect, isLoading }) => {
+export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect, isLoading, isSmallest }) => {
   const getIcon = () => {
     if (scenario.has_smoke || scenario.is_synthetic_stress) return <Wind className="w-3.5 h-3.5 text-cyan-400" />;
     if (scenario.scene_type.includes('rain') || scenario.scene_type.includes('snow')) return <CloudRain className="w-3.5 h-3.5 text-blue-400" />;
@@ -37,6 +38,16 @@ export const ScenarioCard: React.FC<ScenarioCardProps> = ({ scenario, onSelect, 
       <div className="flex items-center gap-2.5">
         <div className="p-1.5 rounded-md bg-slate-800 border border-slate-700 flex-shrink-0">
           {getIcon()}
+        </div>
+        <div className="flex items-center justify-between gap-2">
+          <span className="px-2 py-1 rounded-md bg-slate-950 border border-slate-700 text-[10px] text-slate-300">
+            {scenario.num_points?.toLocaleString() ?? '—'} points
+          </span>
+          {isSmallest && (
+            <span className="px-2 py-1 rounded-md bg-emerald-950/70 border border-emerald-500/60 text-[10px] text-emerald-300 font-bold uppercase tracking-wide">
+              Smallest point cloud
+            </span>
+          )}
         </div>
         <div className="min-w-0">
           <div className="text-[10px] text-cyan-400 font-semibold uppercase tracking-wider truncate">

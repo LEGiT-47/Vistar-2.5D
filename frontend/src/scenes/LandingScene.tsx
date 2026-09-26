@@ -7,12 +7,14 @@ interface LandingSceneProps {
   scenarios: ScenarioMetadata[];
   onSelectScenario: (scenario: ScenarioMetadata) => void;
   isLoading: boolean;
+  loadError?: string | null;
 }
 
 export const LandingScene: React.FC<LandingSceneProps> = ({
   scenarios,
   onSelectScenario,
-  isLoading
+  isLoading,
+  loadError
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<string>('ALL');
@@ -40,6 +42,17 @@ export const LandingScene: React.FC<LandingSceneProps> = ({
     if (activeFilter === 'STRESS') return sc.is_synthetic_stress || sc.scene_type.includes('stress');
     return true;
   });
+  const smallestScenarioId = scenarios.reduce<string | null>((smallestId, scenario) => {
+    if (scenario.num_points === undefined) return smallestId;
+    if (!smallestId) return scenario.id;
+    const currentSmallest = scenarios.find((candidate) => candidate.id === smallestId);
+    return !currentSmallest || scenario.num_points < (currentSmallest.num_points ?? Infinity)
+      ? scenario.id
+      : smallestId;
+  }, null);
+  const sortedScenarios = [...filteredScenarios].sort(
+    (a, b) => (a.num_points ?? Number.POSITIVE_INFINITY) - (b.num_points ?? Number.POSITIVE_INFINITY)
+  );
 
   return (
     <div className="flex-1 bg-slate-950 overflow-y-auto px-6 py-8 text-slate-100 font-mono">
@@ -117,19 +130,27 @@ export const LandingScene: React.FC<LandingSceneProps> = ({
 
         {/* ── Mission Grid ─────────────────────────────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredScenarios.map((sc) => (
+          {sortedScenarios.map((sc) => (
             <ScenarioCard
               key={sc.id}
               scenario={sc}
               onSelect={onSelectScenario}
               isLoading={isLoading}
+              isSmallest={sc.id === smallestScenarioId}
             />
           ))}
         </div>
 
+        {loadError && (
+          <div className="rounded-xl border border-rose-500/50 bg-rose-950/40 px-5 py-4 text-center">
+            <div className="text-sm font-bold text-rose-300">Scenario service unavailable</div>
+            <div className="mt-1 text-xs text-rose-200/80">{loadError}</div>
+          </div>
+        )}
+
         {filteredScenarios.length === 0 && (
           <div className="text-center py-16 text-slate-500 text-xs">
-            No missions match "{searchQuery}".
+            {loadError ? 'No scenario data is available yet.' : `No missions match "${searchQuery}".`}
           </div>
         )}
       </div>
